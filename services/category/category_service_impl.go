@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 
+	"github.com/FatwahFir/golearn/exception"
 	"github.com/FatwahFir/golearn/helpers"
 	"github.com/FatwahFir/golearn/model/entity"
 	categoryRequest "github.com/FatwahFir/golearn/model/request/category"
@@ -55,8 +56,9 @@ func (service CategoryServiceImpl) Update(ctx context.Context, request categoryR
 	helpers.PanicIfError(err)
 
 	category, err := service.CategoryRepository.FindById(ctx, tx, request.Id)
-	helpers.PanicIfError(err)
-
+	if err != nil {
+		panic(exception.NewNotFoundError(err.Error()))
+	}
 	category.Name = request.Name
 
 	category = service.CategoryRepository.Update(ctx, tx, category)
@@ -71,7 +73,9 @@ func (service CategoryServiceImpl) Delete(ctx context.Context, id int) {
 	helpers.PanicIfError(err)
 
 	category, err := service.CategoryRepository.FindById(ctx, tx, id)
-	helpers.PanicIfError(err)
+	if err != nil {
+		panic(exception.NewNotFoundError(err.Error()))
+	}
 
 	service.CategoryRepository.Delete(ctx, tx, category)
 }
@@ -82,7 +86,9 @@ func (service CategoryServiceImpl) FindById(ctx context.Context, categoryId int)
 	helpers.PanicIfError(err)
 
 	category, err := service.CategoryRepository.FindById(ctx, tx, categoryId)
-	helpers.PanicIfError(err)
+	if err != nil {
+		panic(exception.NewNotFoundError(err.Error()))
+	}
 
 	return helpers.ToCategoryResponse(category)
 }

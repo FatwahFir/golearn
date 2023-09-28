@@ -7,6 +7,7 @@ import (
 
 	"github.com/FatwahFir/golearn/app"
 	categoryController "github.com/FatwahFir/golearn/controllers/category"
+	"github.com/FatwahFir/golearn/exception"
 	"github.com/FatwahFir/golearn/helpers"
 	categoryRepository "github.com/FatwahFir/golearn/repository/category"
 	categoryService "github.com/FatwahFir/golearn/services/category"
@@ -29,6 +30,8 @@ func main() {
 	router.POST("/api/category", categoryController.Create)
 	router.PUT("/api/category/:categoryId", categoryController.Update)
 	router.DELETE("/api/category/:categoryId", categoryController.Delete)
+
+	router.PanicHandler = exception.ErrorHandler
 
 	server := http.Server{
 		Addr:    "localhost:3000",
