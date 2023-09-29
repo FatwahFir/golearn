@@ -9,6 +9,7 @@ import (
 	categoryController "github.com/FatwahFir/golearn/controllers/category"
 	"github.com/FatwahFir/golearn/exception"
 	"github.com/FatwahFir/golearn/helpers"
+	"github.com/FatwahFir/golearn/middleware"
 	categoryRepository "github.com/FatwahFir/golearn/repository/category"
 	categoryService "github.com/FatwahFir/golearn/services/category"
 	"github.com/go-playground/validator/v10"
@@ -35,7 +36,7 @@ func main() {
 
 	server := http.Server{
 		Addr:    "localhost:3000",
-		Handler: router,
+		Handler: middleware.NewAuthMiddleware(router),
 	}
 
 	err := server.ListenAndServe()
