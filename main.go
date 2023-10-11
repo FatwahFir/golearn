@@ -5,30 +5,32 @@ import (
 
 	_ "github.com/go-sql-driver/mysql"
 
-	"github.com/FatwahFir/golearn/app"
-	categoryController "github.com/FatwahFir/golearn/controllers/category"
 	"github.com/FatwahFir/golearn/helpers"
 	"github.com/FatwahFir/golearn/middleware"
-	categoryRepository "github.com/FatwahFir/golearn/repository/category"
-	categoryService "github.com/FatwahFir/golearn/services/category"
-	"github.com/go-playground/validator/v10"
 )
+
+func NewServer(authMiddleware *middleware.AuthMiddleware) *http.Server {
+	return &http.Server{
+		Addr:    "localhost:3000",
+		Handler: authMiddleware,
+	}
+}
 
 func main() {
 
-	validator := validator.New()
-	db := app.NewDb()
-	categoryRepository := categoryRepository.NewCategoryRepository()
-	categoryService := categoryService.NewCategoryService(categoryRepository, db, validator)
-	categoryController := categoryController.NewCategoryController(categoryService)
+	//tanpa dependency injection
+	// validator := validator.New()
+	// db := app.NewDb()
+	// categoryRepository := categoryRepository.NewCategoryRepository()
+	// categoryService := categoryService.NewCategoryService(categoryRepository, db, validator)
+	// categoryController := categoryController.NewCategoryController(categoryService)
 
-	router := app.NewRouter(categoryController)
+	// router := app.NewRouter(categoryController)
+	// authMiddleware := middleware.NewAuthMiddleware(router)
 
-	server := http.Server{
-		Addr:    "localhost:3000",
-		Handler: middleware.NewAuthMiddleware(router),
-	}
+	// server := NewServer(authMiddleware)
 
+	server := InitializeServer()
 	err := server.ListenAndServe()
 
 	helpers.PanicIfError(err)
